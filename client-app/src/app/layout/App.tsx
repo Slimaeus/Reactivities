@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
-import { Activity } from '../models/activity';
+
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
+import { Activity } from '../models/Activity';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
