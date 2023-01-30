@@ -5,7 +5,7 @@ import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { Activity } from '../models/Activity';
 import {v4 as uuid} from 'uuid';
-import { agent } from '../api/agent';
+import agent from '../api/agent';
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -15,7 +15,12 @@ function App() {
   useEffect(() => {
     agent.Activities.list()
     .then(response => {
-      setActivities(response.data)
+      let activities : Activity[] = [];
+      response.forEach(activity => {
+        activity.date = activity.date.split('T')[0]
+        activities.push(activity)
+      })
+      setActivities(response)
     })
   }, [])
 
