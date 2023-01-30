@@ -13,7 +13,7 @@ function App() {
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [loading, setLoading] = useState(true)
-  const [submitting, setsubmitting] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     agent.Activities.list()
@@ -46,13 +46,13 @@ function App() {
   }
 
   function handleCreateOrEditActivity(activity: Activity) {
-    setsubmitting(true)
+    setSubmitting(true)
     if (activity.id) {
       agent.Activities.update(activity).then(() => {
         setActivities([...activities.filter(x => x.id !== activity.id), activity])
         setSelectedActivity(activity)
         setEditMode(false)
-        setsubmitting(false)
+        setSubmitting(false)
       })
     }
     else {
@@ -61,13 +61,17 @@ function App() {
         setActivities([...activities, activity])
         setSelectedActivity(activity)
         setEditMode(false)
-        setsubmitting(false)
+        setSubmitting(false)
       })
     }
   }
 
   function handleDeleteActivity(id: string) {
-    setActivities([...activities.filter(x => x.id !== id)])
+    setSubmitting(true)
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter(x => x.id !== id)])
+      setSubmitting(false)
+    })
   }
 
   if (loading) return <LoadingComponent content='Loading app' />
