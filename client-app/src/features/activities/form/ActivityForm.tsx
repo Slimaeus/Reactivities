@@ -1,16 +1,21 @@
 import { Button, Form, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/Activity";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
+import { useParams } from "react-router-dom";
+import { LoadingComponent } from "../../../app/layout/LoadingComponent";
 
 
 export default observer(function ActivityForm() {
-    const {activityStore} = useStore()
+    const { activityStore } = useStore()
 
-    const {selectedActivity, createActivity, updateActivity, loading} = activityStore
+    const { selectedActivity, createActivity, updateActivity,
+        loading, loadActivity, loadingInitial } = activityStore
 
-    const initialState = selectedActivity ?? {
+    const { id } = useParams()
+
+    const [activity, setActivity] = useState<Activity>({
         id: '',
         title: '',
         category: '',
@@ -18,9 +23,11 @@ export default observer(function ActivityForm() {
         date: '',
         city: '',
         venue: ''
-    }
+    })
 
-    const [activity, setActivity] = useState<Activity>(initialState);
+    useEffect(() => {
+        if (id) loadActivity(id).then(activity => setActivity(activity!))
+    }, [id, loadActivity])
 
     function handleSubmit() {
         activity.id ? updateActivity(activity) : createActivity(activity)
@@ -28,13 +35,15 @@ export default observer(function ActivityForm() {
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const { name, value } = event.target;
-        setActivity({...activity, [name]: value})
+        setActivity({ ...activity, [name]: value })
     }
+
+    if (loadingInitial) return <LoadingComponent content='Loading activity...' />
 
     return (
         <Segment clearing>
             <Form onSubmit={handleSubmit} autoComplete='off'>
-                <Form.Input placeholder='Title' value={activity.title} name='title' onChange={handleInputChange}/>
+                <Form.Input placeholder='Title' value={activity.title} name='title' onChange={handleInputChange} />
                 <Form.TextArea placeholder='Description' value={activity.description} name='description' onChange={handleInputChange} />
                 <Form.Input placeholder='Category' value={activity.category} name='category' onChange={handleInputChange} />
                 <Form.Input type='date' placeholder='Date' value={activity.date} name='date' onChange={handleInputChange} />
