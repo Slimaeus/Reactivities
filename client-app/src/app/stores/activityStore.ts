@@ -19,7 +19,7 @@ export default class ActivityStore {
             Date.parse(a.date) - Date.parse(b.date))
     }
 
-    loadingActivies = async () => {
+    loadActivies = async () => {
         this.setLoadingInitial(true)
         try {
             const activities = await agent.Activities.list()
