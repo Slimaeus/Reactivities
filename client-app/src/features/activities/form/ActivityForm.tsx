@@ -10,7 +10,7 @@ import { LoadingComponent } from "../../../app/layout/LoadingComponent";
 export default observer(function ActivityForm() {
     const { activityStore } = useStore()
 
-    const { selectedActivity, createActivity, updateActivity,
+    const { createActivity, updateActivity,
         loading, loadActivity, loadingInitial } = activityStore
 
     const { id } = useParams()
