@@ -21,6 +21,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token)
             runInAction(() => this.user = user)
             router.navigate('/activities')
+            store.modalStore.closeModal()
         } catch (error) {
             throw error
         }
@@ -37,7 +38,7 @@ export default class UserStore {
             const user = await agent.Account.current()
             runInAction(() => this.user = user)
         } catch (error) {
-            console.log(user)
+            console.log(this.user)
         }
     }
 }
