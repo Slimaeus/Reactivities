@@ -3,7 +3,7 @@ import { Button, Header, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 import { useStore } from "../../../app/stores/store";
 import { observer } from "mobx-react-lite";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { LoadingComponent } from "../../../app/layout/LoadingComponent";
 import { Formik, Form } from "formik";
 import * as Yup from 'yup'
@@ -13,15 +13,15 @@ import { MySelectInput } from "../../../app/common/form/MySelectInput";
 import { categoryOptions } from "../../../app/common/options/categoryOptions";
 import { MyDateInput } from "../../../app/common/form/MyDateInput";
 import { v4 as uuid } from 'uuid'
-import { router } from "../../../app/router/Routes";
 
 export default observer(function ActivityForm() {
+    const history = useHistory()
     const { activityStore } = useStore()
 
     const {
         loading, loadActivity, loadingInitial, createActivity, updateActivity } = activityStore
 
-    const { id } = useParams()
+    const { id } = useParams<{id: string}>()
 
     const [activity, setActivity] = useState<Activity>({
         id: '',
@@ -49,9 +49,9 @@ export default observer(function ActivityForm() {
     function handleFormSubmit(activity: Activity) {
         if (!activity.id) {
             activity.id = uuid()
-            createActivity(activity).then(() => router.navigate(`/activities/${activity.id}`))
+            createActivity(activity).then(() => history.push(`/activities/${activity.id}`))
         } else {
-            createActivity(activity).then(() => router.navigate(`/activities/${activity.id}`))
+            createActivity(activity).then(() => history.push(`/activities/${activity.id}`))
         }
         activity.id ? updateActivity(activity) : createActivity(activity)
     }
