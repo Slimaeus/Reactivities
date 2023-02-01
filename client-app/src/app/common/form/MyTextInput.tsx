@@ -5,6 +5,7 @@ interface IMyTextInputProps {
     placeholder: string
     name: string
     label?: string
+    type?: string
 }
 
 export function MyTextInput(props: IMyTextInputProps) {
