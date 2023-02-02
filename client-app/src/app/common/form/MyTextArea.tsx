@@ -4,7 +4,7 @@ import { Form, Label } from 'semantic-ui-react';
 interface IMyTextAreaProps {
     placeholder: string
     name: string
-    row: number
+    rows: number
     label?: string
 }
 
