@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Core
 {
-    public class PageList<T> : List<T>
+    public class PagedList<T> : List<T>
     {
-        public PageList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+        public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
         {
             CurrentPage = pageNumber;
             TotalPages = (int)Math.Ceiling(count / (double)PageSize);
@@ -18,7 +18,7 @@ namespace Application.Core
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public static async Task<PageList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+        public static async Task<PagedList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
         {
             var count = await source.CountAsync();
             var items = await source
@@ -26,7 +26,7 @@ namespace Application.Core
                 .Take(pageSize)
                 .ToListAsync();
 
-            return new PageList<T>(items, count, pageNumber, pageSize);
+            return new PagedList<T>(items, count, pageNumber, pageSize);
         }
     }
 }
