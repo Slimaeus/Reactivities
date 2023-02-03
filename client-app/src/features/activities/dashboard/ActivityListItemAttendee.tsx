@@ -11,7 +11,7 @@ interface IActivityListItemAttendeeProps {
 export default observer(function ActivityListItemAttendee({ attendees }: IActivityListItemAttendeeProps) {
     const styles = {
         borderColor: 'orange',
-        borderWidth: 2
+        borderWidth: 3
     }
     return (
         <List horizontal>
@@ -25,6 +25,7 @@ export default observer(function ActivityListItemAttendee({ attendees }: IActivi
                                 size='mini'
                                 circular
                                 src={attendee.image || '/assets/user.png'}
+                                bordered={attendee.following}
                                 style={attendee.following ? styles : null}
                             />
                         </List.Item>
