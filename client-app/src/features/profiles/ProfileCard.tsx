@@ -23,7 +23,7 @@ export default observer(function ProofileCard({ profile }: Props) {
             </Card.Content>
             <Card.Content extra>
                 <Icon name='user' />
-                20 followers
+                {profile.followersCount} follower{profile.followersCount > 1 && 's'}
             </Card.Content>
         </Card>
     )
