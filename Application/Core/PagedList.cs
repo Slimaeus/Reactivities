@@ -7,8 +7,8 @@ namespace Application.Core
         public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
         {
             CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count / (double)PageSize);
             PageSize = pageSize;
+            TotalPages = (int)Math.Ceiling(count / (double)PageSize);
             TotalCount = count;
             AddRange(items);
         }
