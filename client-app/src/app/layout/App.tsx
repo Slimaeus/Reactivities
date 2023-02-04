@@ -1,8 +1,8 @@
 import { Container } from 'semantic-ui-react';
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import NavBar from './NavBar';
 import { observer } from 'mobx-react-lite';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 import HomePage from '../../features/activities/home/HomePage';
 import { ToastContainer } from 'react-toastify';
 import { useStore } from '../stores/store';
@@ -11,7 +11,7 @@ import ModalContainer from '../common/modals/ModalContainer';
 
 function App() {
   const location = useLocation()
-  const {commonStore, userStore} = useStore()
+  const { commonStore, userStore } = useStore()
 
   useEffect(() => {
     if (commonStore.token) {
@@ -25,7 +25,8 @@ function App() {
 
   return (
     <>
-    <ModalContainer />
+      <ScrollRestoration />
+      <ModalContainer />
       <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
       {location.pathname === '/' ? <HomePage /> :
         <>
