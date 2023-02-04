@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx"
+import { makeAutoObservable, reaction, runInAction } from "mobx"
 import { Activity, ActivityFormValues } from "../models/activity"
 import agent from "../api/agent"
 import { format } from "date-fns"
@@ -18,18 +18,57 @@ export default class ActivityStore {
 
     constructor() {
         makeAutoObservable(this)
+
+        reaction(
+            () => this.predicate.keys(),
+            () => {
+                this.pagingParams = new PagingParams()
+                this.activityRegistry.clear()
+                this.loadActivies()
+            }
+        )
     }
 
     setPagingParams = (pagingPrams: PagingParams) => {
         this.pagingParams = pagingPrams
     }
 
+    setPredicate = (predicate: string, value: string | Date) => {
+        const resetPredicate = () => {
+            this.predicate.forEach((value, key) => {
+                if (key !== 'startDate') this.predicate.delete(key)
+            })
+        }
+        switch (predicate) {
+            case 'all':
+                resetPredicate()
+                this.predicate.set('all', true)
+                break
+            case 'isGoing':
+                resetPredicate()
+                this.predicate.set('isGoing', true)
+                break
+            case 'isHost':
+                resetPredicate()
+                this.predicate.set('isHost', true)
+                break
+            case 'startdate':
+                this.predicate.delete('startDate')
+                this.predicate.set('startDate', value)
+        }
+    }
+
+
     get axiosParams() {
         const params = new URLSearchParams()
         params.append('pageNumber', this.pagingParams.pageNumber.toString())
         params.append('pageSize', this.pagingParams.pageSize.toString())
         this.predicate.forEach((value, key) => {
-            
+            if (key === 'startDate') {
+                params.append(key, (value as Date).toISOString())
+            } else {
+                params.append(key, value)
+            }
         })
         return params
     }
