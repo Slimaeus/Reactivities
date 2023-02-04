@@ -55,6 +55,7 @@ export default class ActivityStore {
             case 'startdate':
                 this.predicate.delete('startDate')
                 this.predicate.set('startDate', value)
+                break
         }
     }
 
