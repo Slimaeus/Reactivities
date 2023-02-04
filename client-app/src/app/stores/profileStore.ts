@@ -1,6 +1,6 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx"
 import agent from "../api/agent"
-import { Photo, Profile } from "../models/profile"
+import { Photo, Profile, UserActivity } from "../models/profile"
 import { store } from "./store"
 
 export default class ProfileStore {
@@ -11,6 +11,8 @@ export default class ProfileStore {
     followings: Profile[] = []
     loadingFollowings: boolean = false
     activeTab = 0
+    userActivities: UserActivity[] = []
+    loadingActivities = false
 
     constructor() {
         makeAutoObservable(this)
@@ -134,7 +136,7 @@ export default class ProfileStore {
             runInAction(() => {
                 if (this.profile && this.profile.username !== store.userStore.user?.username && this.profile.username === username) {
                     following ? this.profile.followersCount++ : this.profile.followersCount--
-                    this.profile.following = ! this.profile.following
+                    this.profile.following = !this.profile.following
                 }
                 if (this.profile && this.profile.username === store.userStore.user?.username) {
                     following ? this.profile.followingCount++ : this.profile.followingCount--
@@ -164,6 +166,23 @@ export default class ProfileStore {
         } catch (error) {
             console.log(error)
             runInAction(() => this.loadingFollowings = false)
+        }
+    }
+
+    loadUserActivities = async (username: string, predicate?: string) => {
+        this.loadingActivities = true;
+        try {
+            const activities = await agent.Profiles.listActivities(username,
+                predicate!);
+            runInAction(() => {
+                this.userActivities = activities;
+                this.loadingActivities = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loadingActivities = false;
+            })
         }
     }
 }

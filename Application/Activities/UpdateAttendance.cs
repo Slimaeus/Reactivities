@@ -53,7 +53,7 @@ namespace Application.Activities
                     attendance = new ActivityAttendee
                     {
                         AppUser = user,
-                        Acitivity = activity,
+                        Activity = activity,
                         IsHost = false
                     };
 
