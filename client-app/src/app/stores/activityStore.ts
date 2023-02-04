@@ -14,6 +14,7 @@ export default class ActivityStore {
     loadingInitial = false
     pagination: Pagination | null = null
     pagingParams = new PagingParams()
+    predicate = new Map().set('all', true)
 
     constructor() {
         makeAutoObservable(this)
@@ -27,6 +28,9 @@ export default class ActivityStore {
         const params = new URLSearchParams()
         params.append('pageNumber', this.pagingParams.pageNumber.toString())
         params.append('pageSize', this.pagingParams.pageSize.toString())
+        this.predicate.forEach((value, key) => {
+            
+        })
         return params
     }
 
