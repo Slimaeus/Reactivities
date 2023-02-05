@@ -37,7 +37,9 @@ export default function HomePage() {
                             inverted
                             color='facebook'
                             content='Login wit Facebook'
+                            loading={userStore.fbLoading}
                             onSuccess={(response: any) => {
+                                // userStore.facebookLogin(response.accessToken)
                                 console.log('Login success', response)
                             }}
                             onFail={(response: any) => {
