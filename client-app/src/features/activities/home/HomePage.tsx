@@ -29,7 +29,7 @@ export default function HomePage() {
                         <Button onClick={() => modalStore.openModal(<RegisterForm />)} size='huge' inverted>
                             Register
                         </Button>
-                        <Divider horizontal inverted>Or</Divider>
+                        {/* <Divider horizontal inverted>Or</Divider>
                         <Button
                             as={FacebookLogin}
                             appId='938369610853697'
@@ -39,13 +39,13 @@ export default function HomePage() {
                             content='Login wit Facebook'
                             loading={userStore.fbLoading}
                             onSuccess={(response: any) => {
-                                // userStore.facebookLogin(response.accessToken)
+                                userStore.facebookLogin(response.accessToken)
                                 console.log('Login success', response)
                             }}
                             onFail={(response: any) => {
                                 console.log('Login failed', response)
                             }}
-                        />
+                        /> */}
                     </>
                 )}
             </Container>

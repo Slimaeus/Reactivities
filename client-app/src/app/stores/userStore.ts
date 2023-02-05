@@ -75,6 +75,7 @@ export default class UserStore {
                 this.fbLoading = false
             })
         } catch (error) {
+            console.log('Error')
             console.log(error)
             runInAction(() => this.fbLoading = false)
         }

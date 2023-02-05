@@ -110,7 +110,7 @@ namespace API.Controllers
         [HttpPost("fbLogin")]
         public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
         {
-            var fbVerifyKeys = _configuration["Facebook:AppId"] + "|" + _configuration["Facebook:AppSecret"];
+            var fbVerifyKeys = _configuration["Facebook:AppId"] + "|" + _configuration["Facebook:ApiSecret"];
 
             var verifyTokenResponse = await _httpClient
                 .GetAsync($"debug_token?input_token={accessToken}&access_token={fbVerifyKeys}");
@@ -118,10 +118,35 @@ namespace API.Controllers
             if (!verifyTokenResponse.IsSuccessStatusCode) return Unauthorized();
 
             var fbUrl = $"me?access_token={accessToken}&fields=name,email,picture.width(100).height(100)";
-        
-            var response = await _httpClient.GetFromJsonAsync<dynamic>(fbUrl);
 
-            return new UserDto();
+            var fbInfo = await _httpClient.GetFromJsonAsync<FacebookDto>(fbUrl);
+
+            var user = await _userManager.Users.Include(p => p.Photos)
+                .FirstOrDefaultAsync(x => x.Email == fbInfo.Email);
+
+            if (user != null) return CreateUserObject(user);
+
+            user = new AppUser
+            {
+                DisplayName = fbInfo.Name,
+                Email = fbInfo.Email,
+                UserName = fbInfo.Email,
+                Photos = new List<Photo>
+                    {
+                        new Photo
+                        {
+                            Id =  "fb_" + fbInfo.Id,
+                            Url = fbInfo.Picture.Data.Url,
+                            IsMain = true
+                        }
+                    }
+            };
+
+            var result = await _userManager.CreateAsync(user);
+
+            if (!result.Succeeded) return BadRequest("Problem creating user account");
+
+            return CreateUserObject(user);
         }
     }
 }
